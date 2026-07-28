@@ -6,22 +6,23 @@ php artisan storage:link || true
 
 echo "Ejecutando migraciones..."
 
-php artisan migrate --force
-
-
-echo "Limpiando configuración..."
-
 php artisan optimize:clear
+
+php artisan migrate --force
 
 echo "Probando conexión SMTP..."
 
 php -r "
-\$fp = fsockopen('smtp.gmail.com', 465, \$errno, \$errstr, 10);
-if (!\$fp) {
-    echo \"ERROR: \$errno - \$errstr\n\";
+$ip = gethostbyname('smtp.gmail.com');
+
+echo "IP: $ip\n";
+
+$fp = fsockopen($ip, 465, $errno, $errstr, 10);
+
+if (!$fp) {
+    echo "ERROR $errno - $errstr\n";
 } else {
-    echo \"SMTP OK\n\";
-    fclose(\$fp);
+    echo "SMTP OK\n";
 }
 "
 
