@@ -12,19 +12,7 @@ php artisan migrate --force
 
 echo "Probando conexión SMTP..."
 
-php -r "
-$ip = gethostbyname('smtp.gmail.com');
-
-echo "IP: $ip\n";
-
-$fp = fsockopen($ip, 465, $errno, $errstr, 10);
-
-if (!$fp) {
-    echo "ERROR $errno - $errstr\n";
-} else {
-    echo "SMTP OK\n";
-}
-"
+php docker/test-smtp.php
 
 echo "Generando cache..."
 
