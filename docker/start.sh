@@ -4,7 +4,6 @@ echo "Inicializando Laravel..."
 
 php artisan storage:link || true
 
-
 echo "Ejecutando migraciones..."
 
 php artisan migrate --force
@@ -13,12 +12,6 @@ php artisan migrate --force
 echo "Limpiando configuración..."
 
 php artisan optimize:clear
-
-echo "Generando cache..."
-
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
 
 echo "Probando conexión SMTP..."
 
@@ -31,5 +24,11 @@ if (!\$fp) {
     fclose(\$fp);
 }
 "
+
+echo "Generando cache..."
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 apache2-foreground

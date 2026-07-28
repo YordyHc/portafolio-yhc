@@ -15,7 +15,7 @@ Route::get('/debug-mail', function () {
         'mailer' => config('mail.default'),
         'host' => config('mail.mailers.smtp.host'),
         'port' => config('mail.mailers.smtp.port'),
-        'encryption' => config('mail.mailers.smtp.encryption'),
+        'scheme' => config('mail.mailers.smtp.scheme'),
         'username' => config('mail.mailers.smtp.username'),
     ]);
 });
