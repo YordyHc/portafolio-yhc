@@ -16,7 +16,7 @@ php artisan optimize:clear
 echo "Probando conexión SMTP..."
 
 php -r "
-\$fp = fsockopen('smtp.gmail.com', 587, \$errno, \$errstr, 10);
+\$fp = fsockopen('smtp.gmail.com', 465, \$errno, \$errstr, 10);
 if (!\$fp) {
     echo \"ERROR: \$errno - \$errstr\n\";
 } else {
