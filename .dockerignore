@@ -5,6 +5,10 @@ vendor
 node_modules
 
 .env
+.env.*
+.env.docker
+
+docker-compose.yml
 
 storage/logs/*
 storage/framework/cache/*
@@ -14,4 +18,6 @@ storage/framework/views/*
 
 bootstrap/cache/*.php
 
-docker-compose.yml
+tests
+
+*.md

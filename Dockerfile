@@ -1,7 +1,18 @@
+FROM composer:2 AS builder
+
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-scripts
+
+
+
 FROM php:8.4-apache
-
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
 # Instalar paquetes del sistema
 RUN apt-get update && apt-get install -y \
     git \
@@ -24,11 +35,33 @@ RUN docker-php-ext-install \
 # Activar mod_rewrite para Laravel
 RUN a2enmod rewrite
 
+COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+
 WORKDIR /var/www/html
 
-COPY composer.json composer.lock ./
+COPY . .
 
-RUN composer install \
-    --no-dev \
-    --optimize-autoloader \
-    --no-interaction
+COPY --from=builder /app/vendor ./vendor
+
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Permisos Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+#ESTO ES PARA LOCAL
+
+#ENTRYPOINT ["entrypoint.sh"]
+
+#-------------------------
+
+#ESTO ES PARA RENDER
+COPY docker/start.sh /usr/local/bin/start.sh
+
+RUN chmod +x /usr/local/bin/start.sh
+
+CMD ["start.sh"]
+
+#-------------------------
