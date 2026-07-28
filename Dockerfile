@@ -43,24 +43,29 @@ COPY . .
 
 COPY --from=builder /app/vendor ./vendor
 
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+#ESTO ES PARA LOCAL
+#COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
-RUN chmod +x /usr/local/bin/entrypoint.sh
+#RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Permisos Laravel
-RUN chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
-
-#ESTO ES PARA LOCAL
+#RUN chown -R www-data:www-data storage bootstrap/cache \
+    #&& chmod -R 775 storage bootstrap/cache
 
 #ENTRYPOINT ["entrypoint.sh"]
 
 #-------------------------
 
 #ESTO ES PARA RENDER
+
 COPY docker/start.sh /usr/local/bin/start.sh
 
 RUN chmod +x /usr/local/bin/start.sh
+
+
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
 
 CMD ["start.sh"]
 
