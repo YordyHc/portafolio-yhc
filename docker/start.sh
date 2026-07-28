@@ -10,11 +10,15 @@ echo "Ejecutando migraciones..."
 php artisan migrate --force
 
 
-echo "Optimizando Laravel..."
+echo "Limpiando configuración..."
 
 php artisan optimize:clear
 
-echo "Aplicación lista"
+echo "Generando cache..."
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 echo "Probando conexión SMTP..."
 
