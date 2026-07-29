@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\contacto;
+use App\Models\Contacto;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
+use Illuminate\Support\Facades\Log;
 
 class ContactoController extends Controller
 {
@@ -38,11 +39,18 @@ class ContactoController extends Controller
     try {
         $contacto = Contacto::create($datos);
 
-        $emailService->enviarContacto($contacto);
+        try {
+            $emailService->enviarContacto($contacto);
+        } catch (\Exception $e) {
+
+            Log::error(
+                'Error enviando correo: '.$e->getMessage()
+            );
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Contacto registrado correctamente.',
+            'message' => 'Contacto registrado correctamente.'
         ], 201);
 
     } catch (\Exception $e) {
