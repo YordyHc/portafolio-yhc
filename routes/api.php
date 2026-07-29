@@ -8,7 +8,7 @@ Route::get('/test', function () {
         'message' => 'API funcionando'
     ]);
 });
-Route::post('/clientes', [ContactoController::class, 'store']);
+Route::post('/portafolio', [ContactoController::class, 'store']);
 
 Route::get('/debug-mail', function () {
     return response()->json([
