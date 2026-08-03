@@ -2,15 +2,33 @@
 
 namespace App\Services;
 
-use App\Mail\NuevoContactoMail;
 use App\Models\Contacto;
-use Illuminate\Support\Facades\Mail;
 
 class EmailService
 {
-    public function enviarContacto(Contacto $contacto): void
-    {
-        Mail::to($contacto->correo)
-            ->send(new NuevoContactoMail($contacto));
+
+    public function __construct(
+        private GmailService $gmailService
+    ) {}
+
+
+    public function enviarContacto(
+        Contacto $contacto
+    ): void {
+
+
+        $html = view(
+            'emails.contacto',
+            [
+                'contacto' => $contacto
+            ]
+        )->render();
+
+
+        $this->gmailService->send(
+            $contacto->correo,
+            'Gracias por comunicarte conmigo',
+            $html
+        );
     }
 }

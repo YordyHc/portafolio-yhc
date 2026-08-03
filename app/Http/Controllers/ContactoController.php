@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\contacto;
+use App\Models\Contacto;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
+use App\Http\Requests\StoreContactoRequest;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 
 class ContactoController extends Controller
 {
@@ -27,28 +30,49 @@ class ContactoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, EmailService $emailService)
+    public function store(StoreContactoRequest  $request, EmailService $emailService)
 {
-    $datos = $request->validate([
-        'nombre' => 'required|string|max:255',
-        'correo' => 'required|email|unique:contacto,correo',
-        'mensaje' => 'required|string'
-    ]);
-
     try {
-        $contacto = Contacto::create($datos);
 
-        $emailService->enviarContacto($contacto);
+        $contacto = Contacto::create($request->validated());
+
+        try {
+            $emailService->enviarContacto($contacto);
+        } catch (\Throwable $e) {
+
+            Log::warning(
+                'No fue posible enviar el correo de confirmación.',
+                [
+                    'contacto_id' => $contacto->id,
+                    'error' => $e->getMessage(),
+                ]
+            );
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Contacto registrado correctamente.',
         ], 201);
 
-    } catch (\Exception $e) {
+    } catch (QueryException $e) {
+
+        Log::error('Error de base de datos.', [
+            'error' => $e->getMessage(),
+        ]);
+
         return response()->json([
             'success' => false,
-            'message' => $e->getMessage(),
+            'message' => 'No fue posible registrar la información.',
+        ], 500);
+
+    } catch (\Throwable $e) {
+
+        Log::critical('Error inesperado.', [
+            'error' => $e->getMessage(),
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Ha ocurrido un error interno.',
         ], 500);
     }
 
