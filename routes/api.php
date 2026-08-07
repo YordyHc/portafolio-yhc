@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\WidinstaController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -9,13 +10,4 @@ Route::get('/test', function () {
     ]);
 });
 Route::post('/portafolio', [ContactoController::class, 'store']);
-
-Route::get('/debug-mail', function () {
-    return response()->json([
-        'mailer' => config('mail.default'),
-        'host' => config('mail.mailers.smtp.host'),
-        'port' => config('mail.mailers.smtp.port'),
-        'scheme' => config('mail.mailers.smtp.scheme'),
-        'username' => config('mail.mailers.smtp.username'),
-    ]);
-});
+Route::get('/widinsta', [WidinstaController::class, 'index']);
