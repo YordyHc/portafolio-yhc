@@ -82,7 +82,7 @@ class ContactoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(contacto $contacto)
+    public function show(Contacto  $contacto)
     {
         //
     }
@@ -90,7 +90,7 @@ class ContactoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(contacto $contacto)
+    public function edit(Contacto  $contacto)
     {
         //
     }
@@ -98,7 +98,7 @@ class ContactoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, contacto $contacto)
+    public function update(Request $request, Contacto  $contacto)
     {
         //
     }
@@ -106,7 +106,7 @@ class ContactoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(contacto $contacto)
+    public function destroy(Contacto  $contacto)
     {
         //
     }
