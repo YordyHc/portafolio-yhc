@@ -61,36 +61,22 @@ class ContactoController extends Controller
         ], 201);
 
     } catch (QueryException $e) {
-
-        Log::error('Error de base de datos.', [
-            'error' => $e->getMessage(),
-        ]);
-
         return response()->json([
             'success' => false,
-            'message' => 'No fue posible registrar la información.',
+            'message' => $e->getMessage(),
+            'exception' => get_class($e),
+            'sql' => $e->getSql(),
         ], 500);
-
     } catch (\Throwable $e) {
 
-        Log::critical('ERROR EN CONTACTO', [
-            'class' => get_class($e),
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString(),
-        ]);
-
-        Log::critical('Error inesperado.', [
-            'error' => $e->getMessage(),
-        ]);
-
         return response()->json([
             'success' => false,
-            'message' => 'Ha ocurrido un error interno.',
+            'message' => $e->getMessage(),
+            'exception' => get_class($e),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
         ], 500);
     }
-
 }
 
     /**
