@@ -32,9 +32,16 @@ class ContactoController extends Controller
      */
     public function store(StoreContactoRequest  $request, EmailService $emailService)
 {
+    Log::info('ENTRÓ A CONTACTO STORE');
     try {
 
+        Log::info('ANTES DE CREAR CONTACTO');
+
         $contacto = Contacto::create($request->validated());
+
+        Log::info('CONTACTO CREADO', [
+            'id' => $contacto->id,
+        ]);
 
         try {
             $emailService->enviarContacto($contacto);
@@ -65,6 +72,14 @@ class ContactoController extends Controller
         ], 500);
 
     } catch (\Throwable $e) {
+
+        Log::critical('ERROR EN CONTACTO', [
+            'class' => get_class($e),
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString(),
+        ]);
 
         Log::critical('Error inesperado.', [
             'error' => $e->getMessage(),
