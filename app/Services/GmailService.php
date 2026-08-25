@@ -6,6 +6,7 @@ use App\Models\GoogleToken;
 use Google\Client;
 use Google\Service\Gmail;
 use Google\Service\Gmail\Message;
+use Illuminate\Support\Facades\Log;
 
 class GmailService
 {
@@ -42,14 +43,34 @@ class GmailService
                 $token->refresh_token
             );
 
+            Log::debug('Respuesta completa de Google', [
+                'response' => $newToken,
+            ]);
+
+
+            if (isset($newToken['error'])) {
+                throw new \RuntimeException(
+                    'No fue posible renovar el token de Google: ' .
+                    ($newToken['error_description'] ?? $newToken['error'])
+                );
+            }
+
+            if (empty($newToken['access_token'])) {
+                throw new \RuntimeException(
+                    'Google no devolvió un access_token al renovar el token.'
+                );
+            }
 
             $token->update([
                 'access_token' => $newToken['access_token'],
                 'expires_at' => now()->addSeconds(
-                    $newToken['expires_in']
+                    $newToken['expires_in'] ?? 3600
                 )
             ]);
+
+            $client->setAccessToken($newToken);
         }
+
 
 
         return $client;
