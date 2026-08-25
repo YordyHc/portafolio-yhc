@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleAuthController;
 
 
-Route::get('/oauth/gmail', [
+/*Route::get('/oauth/gmail', [
     GoogleAuthController::class,
     'redirect'
-]);
+]);*/
 
 
 Route::get('/oauth/gmail/callback', [
